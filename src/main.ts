@@ -1,18 +1,21 @@
 import {App, Editor, MarkdownView, Modal, Notice, Plugin} from 'obsidian';
-import {DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab} from "./settings";
+import {DEFAULT_SETTINGS, SlidesPluginSettings, SlidesSettingTab} from "./settings.js";
+import {SlidesWebserver} from "./webserver.js";
 
-// Remember to rename these classes and interfaces!
+export default class SlidesPlugin extends Plugin {
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+	settings: SlidesPluginSettings;
+
+	webserver: SlidesWebserver;
 
 	async onload() {
+
 		await this.loadSettings();
 
-		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('dice', 'Sample', (evt: MouseEvent) => {
-			// Called when the user clicks the icon.
-			new Notice('This is a notice!');
+		this.addRibbonIcon('info', 'Show slides', (evt: MouseEvent) => {
+			this.webserver = new SlidesWebserver();
+			this.webserver.start();
+			new Notice('Slides webserver started on port 3000');
 		});
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
@@ -57,12 +60,14 @@ export default class MyPlugin extends Plugin {
 		});
 
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new SlidesSettingTab(this.app, this));
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
 		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
 			new Notice("Click");
+			console.log(evt);
+			console.log("Hello world!");
 		});
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
@@ -74,7 +79,7 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<MyPluginSettings>);
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData() as Partial<SlidesPluginSettings>);
 	}
 
 	async saveSettings() {
