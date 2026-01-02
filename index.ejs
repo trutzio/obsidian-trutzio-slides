@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="<%= language %>">
+	<head>
+		<meta charset="utf-8" />
+		<title><%= title %></title>
+		<link rel="stylesheet" href="/dist/reveal.css" />
+		<link rel="stylesheet" href="/dist/theme/<%= theme %>.css" id="theme" />
+		<link
+			rel="stylesheet"
+			href="/plugin/highlight/<%= highlight_theme %>.css"
+		/>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<!-- Use external markdown resource, separate slides by three ---, vertical slides by two -- -->
+				<section
+					data-markdown="/md/<%= encodeURIComponent(slidePath) %>"
+					data-separator="^---$"
+					data-separator-vertical="^--$"
+				></section>
+			</div>
+		</div>
+		<script src="/dist/reveal.js"></script>
+		<script src="/plugin/markdown/markdown.js"></script>
+		<script src="/plugin/highlight/highlight.js"></script>
+		<script src="/plugin/notes/notes.js"></script>
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+			});
+		</script>
+	</body>
+</html>
