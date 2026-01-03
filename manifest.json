@@ -1,9 +1,9 @@
 {
 	"id": "trutzio-slides",
-	"name": "Slides from trutz.io",
+	"name": "Slides using Markdown",
 	"version": "0.1.0",
 	"minAppVersion": "1.10.3",
-	"description": "Obsidian plugin presenting your markdown slides using revealjs",
+	"description": "Allows you to create slides using Markdown and present them in your browser via revealjs.com framework",
 	"author": "Christian Trutz",
 	"authorUrl": "https://github.com/trutzio",
 	"fundingUrl": "https://github.com/sponsors/trutzonline",
