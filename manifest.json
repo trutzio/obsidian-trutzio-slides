@@ -3,7 +3,7 @@
 	"name": "Slides",
 	"version": "0.3.0",
 	"minAppVersion": "1.10.3",
-	"description": "Create slides using markdown and present them in your browser via revealjs.com framework",
+	"description": "Create slides using markdown and present them in your browser via revealjs.com framework.",
 	"author": "Christian Trutz",
 	"authorUrl": "https://github.com/trutzonline",
 	"fundingUrl": "https://github.com/sponsors/trutzonline",
