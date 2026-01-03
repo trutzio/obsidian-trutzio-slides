@@ -2,6 +2,7 @@ import { fastify, FastifyInstance } from "fastify";
 import { fastifyStatic } from "@fastify/static";
 import { fastifyView } from "@fastify/view";
 import path from "node:path";
+import ejs from "ejs";
 
 export class SlidesWebserver {
 	private _server: FastifyInstance = fastify({ logger: false });
@@ -9,10 +10,9 @@ export class SlidesWebserver {
 	private _contentPath: string = "";
 
 	constructor(vaultDir: string, pluginDir: string) {
-
 		this._server.register(fastifyView, {
 			engine: {
-				ejs: require("ejs"),
+				ejs: ejs,
 			},
 			templates: pluginDir,
 		});
@@ -45,17 +45,31 @@ export class SlidesWebserver {
 		});
 	}
 
-	async show(contentPath: string) {
+	show(contentPath: string) {
 		this._contentPath = contentPath;
 	}
 
-	async start() {
-		await this._server.listen({ port: this._port });
-		console.info("Slides webserver is ready to go.");
+	start() {
+		this._server
+			.listen({ port: this._port })
+			.then(() => {
+				console.debug(
+					`Slides webserver is running at http://localhost:${this._port}`
+				);
+			})
+			.catch((err) => {
+				console.error("Error starting Slides webserver:", err);
+			});
 	}
 
-	async stop() {
-		await this._server.close();
-		console.info("Slides webserver closed.");
+	stop() {
+		this._server
+			.close()
+			.then(() => {
+				console.debug("Slides webserver closed.");
+			})
+			.catch((err) => {
+				console.error("Error stopping Slides webserver:", err);
+			});
 	}
 }

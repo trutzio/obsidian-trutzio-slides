@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-slides-plugin",
-	"name": "Slides",
+	"id": "trutzio-slides",
+	"name": "Slides from trutz.io",
 	"version": "0.1.0",
-	"minAppVersion": "0.15.0",
-	"description": "Uses reveal.js to create slides from markdown files",
+	"minAppVersion": "1.10.3",
+	"description": "Obsidian plugin presenting your markdown slides using revealjs",
 	"author": "Christian Trutz",
 	"authorUrl": "https://github.com/trutzio",
 	"fundingUrl": "https://github.com/sponsors/trutzonline",

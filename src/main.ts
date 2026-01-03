@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin } from "obsidian";
+import { Plugin } from "obsidian";
 import {
 	DEFAULT_SETTINGS,
 	SlidesPluginSettings,
@@ -18,18 +18,21 @@ export default class SlidesPlugin extends Plugin {
 		this.addRibbonIcon("info", "Show slides", (evt: MouseEvent) => {
 			const targetDocument = this.app.workspace.getActiveFile();
 			if (targetDocument) {
-				console.log(`Path: ${targetDocument.path}`);
 				this.webserver.show(targetDocument.path);
 				window.open("http://localhost:3000");
 			}
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SlidesSettingTab(this.app, this));
 
-		const vaultDir = (this.app.vault.adapter as any).basePath;
-		const pluginDir = path.join(vaultDir, this.manifest.dir? this.manifest.dir : ".obsidian/plugins/slides");
-		this.webserver = new SlidesWebserver(vaultDir, pluginDir)
+		const vaultDir = (
+			this.app.vault.adapter as unknown as { basePath: string }
+		).basePath;
+		const pluginDir = path.join(
+			vaultDir,
+			this.manifest.dir ? this.manifest.dir : "" // TODO: Check if empty string is correct
+		);
+		this.webserver = new SlidesWebserver(vaultDir, pluginDir);
 		this.webserver.start();
 	}
 
@@ -47,21 +50,5 @@ export default class SlidesPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let { contentEl } = this;
-		contentEl.setText("Woah!");
-	}
-
-	onClose() {
-		const { contentEl } = this;
-		contentEl.empty();
 	}
 }
