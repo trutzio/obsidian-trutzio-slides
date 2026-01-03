@@ -33,13 +33,13 @@ export class SlidesWebserver {
 		});
 
 		this._server.register(fastifyStatic, {
-			root: path.join(pluginDir, "node_modules/reveal.js/dist"),
+			root: path.join(pluginDir, "dist"),
 			prefix: "/dist/",
 			decorateReply: false,
 		});
 
 		this._server.register(fastifyStatic, {
-			root: path.join(pluginDir, "node_modules/reveal.js/plugin"),
+			root: path.join(pluginDir, "plugin"),
 			prefix: "/plugin/",
 			decorateReply: false,
 		});
