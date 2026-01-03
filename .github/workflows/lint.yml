@@ -1,4 +1,4 @@
-name: Node.js build
+name: Obsidian Slides plugin Linting
 on:
     push:
         branches: ["**"]
@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [24.x, 25.x]
+                node-version: [18.x, 25.x]
                 # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
         steps:
             - uses: actions/checkout@v4
@@ -21,4 +21,3 @@ jobs:
             - run: npm ci
             - run: npm run build --if-present
             - run: npm run lint
-
