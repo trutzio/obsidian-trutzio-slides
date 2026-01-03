@@ -5,7 +5,7 @@ import path from "node:path";
 export default class SlidesPlugin extends Plugin {
 	webserver: SlidesWebserver;
 
-	async onload() {
+	onload() {
 		this.addRibbonIcon(
 			"file-chart-pie",
 			"Show slides",
