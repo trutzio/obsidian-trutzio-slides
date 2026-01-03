@@ -1,90 +1,117 @@
-# Obsidian Sample Plugin
+# Obsidian Slides Plugin
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+Create slides using markdown in [Obsidian](https://obsidian.md) and present them via [Reveal.js](https://revealjs.com) in your browser.
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## Features
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open modal (simple)" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+- Create beautiful slides using `---` as separator within Obsidian notes
+- Highlight or incrementally reveal individual elements on a slide
+- Create links between slides
+- Embed code into your slides with line numbers
+- Highlight and incrementally reveal individual lines in your embeded code
+- Speaker notes and speaker notes window
+- Mathematical formulas via [KateX](https://katex.org/)
 
-## First time developing plugins?
+## Manual Installation
 
-Quick starting guide for new plugin devs:
+1. Download the latest release from [GitHub](https://github.com/trutzio/obsidian-trutzio-slides/releases), you need only the file `trutzio-slides.zip`
+2. In Obsidian, open your vault's root folder in your file explorer
+3. Navigate to the `.obsidian/plugins` directory, if it doesn't exist, create it
+4. Extract the contents of the downloaded `.zip` file into a new folder within the `plugins` directory.
+5. Restart Obsidian or reload your vault
+6. Go to `Settings` > `Community Plugins` and make sure "Safe Mode" is turned off
+7. Click on `Browse` under `Community Plugins`, find `Slides`, and enable it
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Element and Slide Attributes
 
-## Releasing new releases
+You can customize the slide appearence and the revealing of elements within slides by using
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+- `<!-- .slide: ... -->` and
+- `<!-- .element: ... -->`
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+markups as described [here](https://revealjs.com/markdown/#element-attributes). The following example slide:
 
-## Adding your plugin to the community plugin list
+```md
+---
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+<!-- .slide: data-background="#ff0000" -->
 
-## How to use
+# My Title
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+- Item 1 <!-- .element: class="fragment" data-fragment-index="2" -->
+- Item 2 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- This project already has eslint preconfigured, you can invoke a check by running`npm run lint`
-- Together with a custom eslint [plugin](https://github.com/obsidianmd/eslint-plugin) for Obsidan specific code guidelines.
-- A GitHub action is preconfigured to automatically lint every commit on all branches.
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+---
 ```
 
-If you have multiple URLs, you can also do:
+has a red background and the bullet points will incrementally appear in reverse order. Please use the cursor keys to reveal the items. More on fragments attributes [here](https://revealjs.com/fragments/).
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
+## Links between slides
+
+You can directly navigate between slides by giving the target slide an id and using this id as a link in the source slide. Here two example slides demonstrating navigation:
+
+```md
+---
+<!-- .slide: id="demo" -->
+# Markdown Demo
+
+This slide has id = "demo".
+
+---
+
+[go to slide with id "demo"](#/demo)
+
+---
 ```
 
-## API Documentation
+The first slide has id `demo` which is used as link `(#/demo)` from the second slide.
 
-See https://docs.obsidian.md
+## Embedding Code
+
+You can embed code from different languages like Python, Java, etc. The following slide
+
+```md
+---
+# My Java Code
+
+\`\`\`java [1|3-7]
+class Main {
+  public static void main(String[] args) {
+    int first = 10;
+    int second = 20;
+    // add two numbers
+    int sum = first + second;
+    System.out.println(first + " + " + second + " = "  + sum);
+  }
+}
+\`\`\`
+---
+```
+
+contains Java code with line numbers. Plese also note the revealing of the first line of code and after that the focus on the lines 3-7.
+
+## Speaker Notes
+
+Within the presentation in browser press `S` to get an extra windows with actual and next slide containing also the speaker notes. At the end of a slide insert your speaker notes after `Note:` like in the example below:
+
+```md
+---
+
+Slide with speaker notes.
+
+Note: This notes are only visible in the speaker notes window. Please press S within a presentation to open the speaker notes window.
+---
+```
+
+## Mathematical formulas with TeX
+
+Within slides it is possible to use [KaTex](https://katex.org/) formulas between `$$` signs. Below an example:
+
+```md
+---
+## Formulas with KaTex
+
+$$F(x) = \int_{-\infty}^\infty f(x) e^{2 \pi i \xi} d\xi$$
+
+---
+```
