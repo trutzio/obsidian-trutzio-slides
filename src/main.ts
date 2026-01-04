@@ -42,19 +42,21 @@ export default class SlidesPlugin extends Plugin {
 				.then(async (unzipped) => {
 					unzipped.forEach((relativePath, file) => {
 						const fullPath = path.join(pluginDir, relativePath);
-						const dirPath = path.dirname(fullPath);
-						mkdirSync(dirPath, { recursive: true });
-						file.async("nodebuffer")
-							.then((data) => {
-								writeFileSync(fullPath, data);
-								console.debug(`Wrote file ${fullPath}`);
-							})
-							.catch((error) => {
-								console.error(
-									`Error writing file ${fullPath}:`,
-									error
-								);
-							});
+						if (file.dir) {
+							mkdirSync(fullPath, { recursive: true });
+						} else {
+							file.async("nodebuffer")
+								.then((data) => {
+									writeFileSync(fullPath, data);
+									console.debug(`Wrote file ${fullPath}`);
+								})
+								.catch((error) => {
+									console.error(
+										`Error writing file ${fullPath}:`,
+										error
+									);
+								});
+						}
 					});
 				})
 				.catch((error) => {
