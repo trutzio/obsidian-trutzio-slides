@@ -1,7 +1,7 @@
 {
 	"id": "trutzio-slides",
 	"name": "Slides",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"minAppVersion": "1.10.3",
 	"description": "Create slides using markdown and present them in your browser via revealjs.com framework.",
 	"author": "Christian Trutz",
