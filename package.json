@@ -1,6 +1,6 @@
 {
 	"name": "trutzio-slides",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "Allows you to create slides using Markdown and present them in your browser via revealjs.com framework",
 	"main": "main.js",
 	"type": "module",
@@ -30,6 +30,7 @@
 		"@fastify/view": "9.1.0",
 		"ejs": "3.1.10",
 		"fastify": "4.29.1",
+		"jszip": "3.10.1",
 		"obsidian": "1.10.3",
 		"reveal.js": "5.2.1"
 	}

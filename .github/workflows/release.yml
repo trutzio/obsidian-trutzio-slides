@@ -25,7 +25,7 @@ jobs:
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: |
-                  zip -r trutzio-slides.zip main.js manifest.json styles.css index.ejs dist plugin
+                  zip -r trutzio-slides.zip index.ejs dist plugin
                   tag="${GITHUB_REF#refs/tags/}"
                   gh release create "$tag" \
                     --title="$tag" \
