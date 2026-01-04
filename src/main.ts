@@ -39,7 +39,7 @@ export default class SlidesPlugin extends Plugin {
 			const zip = new JSZip();
 			await zip
 				.loadAsync(response.arrayBuffer)
-				.then(async (unzipped) => {
+				.then((unzipped) => {
 					unzipped.forEach((relativePath, file) => {
 						const fullPath = path.join(pluginDir, relativePath);
 						if (file.dir) {
