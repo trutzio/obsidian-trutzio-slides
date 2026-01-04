@@ -3,7 +3,7 @@ import { SlidesWebserver } from "./webserver.js";
 import path from "node:path";
 import { requestUrl } from "obsidian";
 import JSZip from "jszip";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 
 export default class SlidesPlugin extends Plugin {
 	webserver: SlidesWebserver;
@@ -20,7 +20,6 @@ export default class SlidesPlugin extends Plugin {
 				}
 			}
 		);
-
 		const vaultDir = (
 			this.app.vault.adapter as unknown as { basePath: string }
 		).basePath;
@@ -28,7 +27,29 @@ export default class SlidesPlugin extends Plugin {
 			vaultDir,
 			this.manifest.dir ? this.manifest.dir : "" // TODO: Check if empty string is correct
 		);
+		await this.checkForExtraPluginFiles(pluginDir);
+		this.webserver = new SlidesWebserver(vaultDir, pluginDir);
+		this.webserver.start();
+	}
 
+	onunload() {
+		this.webserver.stop();
+	}
+
+	async checkForExtraPluginFiles(pluginDir: string) {
+		let allExtraPluginFilesExists = true;
+		["index.ejs", "dist", "plugin"].every((name) => {
+			const fileExists = existsSync(path.join(pluginDir, name));
+			allExtraPluginFilesExists &&= fileExists;
+			return true;
+		});
+		if (!allExtraPluginFilesExists) {
+			await this.downloadAndExtractExtraPluginFiles(pluginDir);
+		}
+	}
+
+	async downloadAndExtractExtraPluginFiles(pluginDir: string) {
+		console.debug("Downloading extra plugin files...");
 		const downloadUrl = `https://github.com/trutzio/obsidian-trutzio-slides/releases/download/${this.manifest.version}/trutzio-slides.zip`;
 		await requestUrl(downloadUrl).then(async (response) => {
 			if (response.status !== 200) {
@@ -39,34 +60,28 @@ export default class SlidesPlugin extends Plugin {
 			const zip = new JSZip();
 			await zip
 				.loadAsync(response.arrayBuffer)
-				.then(async (unzipped) => {
+				.then((unzipped) => {
 					unzipped.forEach((relativePath, file) => {
 						const fullPath = path.join(pluginDir, relativePath);
-						const dirPath = path.dirname(fullPath);
-						mkdirSync(dirPath, { recursive: true });
-						file.async("nodebuffer")
-							.then((data) => {
-								writeFileSync(fullPath, data);
-								console.debug(`Wrote file ${fullPath}`);
-							})
-							.catch((error) => {
-								console.error(
-									`Error writing file ${fullPath}:`,
-									error
-								);
-							});
+						if (file.dir) {
+							mkdirSync(fullPath, { recursive: true });
+						} else {
+							file.async("nodebuffer")
+								.then((data) => {
+									writeFileSync(fullPath, data);
+								})
+								.catch((error) => {
+									console.error(
+										`Error writing file ${fullPath}:`,
+										error
+									);
+								});
+						}
 					});
 				})
 				.catch((error) => {
 					console.error("Error unzipping the plugin files:", error);
 				});
 		});
-
-		this.webserver = new SlidesWebserver(vaultDir, pluginDir);
-		this.webserver.start();
-	}
-
-	onunload() {
-		this.webserver.stop();
 	}
 }

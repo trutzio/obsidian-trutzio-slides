@@ -14,13 +14,14 @@ Create slides using markdown in [Obsidian](https://obsidian.md) and present them
 
 ## Manual Installation
 
-1. Download the latest release from [GitHub](https://github.com/trutzio/obsidian-trutzio-slides/releases), you need only the file `trutzio-slides.zip`
-2. In Obsidian, open your vault's root folder in your file explorer
-3. Navigate to the `.obsidian/plugins` directory, if it doesn't exist, create it
-4. Extract the contents of the downloaded `.zip` file into a new folder within the `plugins` directory.
-5. Restart Obsidian or reload your vault
-6. Go to `Settings` > `Community Plugins` and make sure "Safe Mode" is turned off
-7. Click on `Browse` under `Community Plugins`, find `Slides`, and enable it
+1. Download the latest release from [GitHub](https://github.com/trutzio/obsidian-trutzio-slides/releases), you need the files `main.js`, `manifest.json`, `styles.css` and `trutzio-slides.zip`
+1. In Obsidian, open your vault's root folder in your file explorer
+1. Navigate to the `.obsidian/plugins` directory, if it doesn't exist, create it
+1. Extract the contents of the downloaded `.zip` file into a new folder within the `plugins` directory
+1. Copy also the downloaded `main.js`, `manifest.json`, `styles.css` files into the newly created folder
+1. Restart Obsidian or reload your vault
+1. Go to `Settings` > `Community Plugins` and make sure "Safe Mode" is turned off
+1. Click on `Browse` under `Community Plugins`, find `Slides`, and enable it
 
 ## Element and Slide Attributes
 
@@ -74,7 +75,7 @@ You can embed code from different languages like Python, Java, etc. The followin
 ---
 # My Java Code
 
-\`\`\`java [1|3-7]
+```java [1|3-7]
 class Main {
   public static void main(String[] args) {
     int first = 10;
@@ -84,7 +85,7 @@ class Main {
     System.out.println(first + " + " + second + " = "  + sum);
   }
 }
-\`\`\`
+\```
 ---
 ```
 
