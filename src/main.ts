@@ -48,7 +48,6 @@ export default class SlidesPlugin extends Plugin {
 							file.async("nodebuffer")
 								.then((data) => {
 									writeFileSync(fullPath, data);
-									console.debug(`Wrote file ${fullPath}`);
 								})
 								.catch((error) => {
 									console.error(
