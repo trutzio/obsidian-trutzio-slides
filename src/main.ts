@@ -38,11 +38,13 @@ export default class SlidesPlugin extends Plugin {
 
 	async checkForExtraPluginFiles(pluginDir: string) {
 		let allExtraPluginFilesExists = true;
-		["index.ejs", "dist", "plugin"].every((name) => {	
-			allExtraPluginFilesExists &&= existsSync(path.join(pluginDir, name));
+		["index.ejs", "dist", "plugin"].every((name) => {
+			const fileExists = existsSync(path.join(pluginDir, name));
+			allExtraPluginFilesExists &&= fileExists;
+			return true;
 		});
 		if (!allExtraPluginFilesExists) {
-			await this.downloadAndExtractExtraPluginFiles(pluginDir);	
+			await this.downloadAndExtractExtraPluginFiles(pluginDir);
 		}
 	}
 
