@@ -3,7 +3,7 @@ import { SlidesWebserver } from "./webserver.js";
 import path from "node:path";
 import { requestUrl } from "obsidian";
 import JSZip from "jszip";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 
 export default class SlidesPlugin extends Plugin {
 	webserver: SlidesWebserver;
@@ -20,7 +20,6 @@ export default class SlidesPlugin extends Plugin {
 				}
 			}
 		);
-
 		const vaultDir = (
 			this.app.vault.adapter as unknown as { basePath: string }
 		).basePath;
@@ -28,7 +27,27 @@ export default class SlidesPlugin extends Plugin {
 			vaultDir,
 			this.manifest.dir ? this.manifest.dir : "" // TODO: Check if empty string is correct
 		);
+		await this.checkForExtraPluginFiles(pluginDir);
+		this.webserver = new SlidesWebserver(vaultDir, pluginDir);
+		this.webserver.start();
+	}
 
+	onunload() {
+		this.webserver.stop();
+	}
+
+	async checkForExtraPluginFiles(pluginDir: string) {
+		let allExtraPluginFilesExists = true;
+		["index.ejs", "dist", "plugin"].every((name) => {	
+			allExtraPluginFilesExists &&= existsSync(path.join(pluginDir, name));
+		});
+		if (!allExtraPluginFilesExists) {
+			await this.downloadAndExtractExtraPluginFiles(pluginDir);	
+		}
+	}
+
+	async downloadAndExtractExtraPluginFiles(pluginDir: string) {
+		console.debug("Downloading extra plugin files...");
 		const downloadUrl = `https://github.com/trutzio/obsidian-trutzio-slides/releases/download/${this.manifest.version}/trutzio-slides.zip`;
 		await requestUrl(downloadUrl).then(async (response) => {
 			if (response.status !== 200) {
@@ -62,12 +81,5 @@ export default class SlidesPlugin extends Plugin {
 					console.error("Error unzipping the plugin files:", error);
 				});
 		});
-
-		this.webserver = new SlidesWebserver(vaultDir, pluginDir);
-		this.webserver.start();
-	}
-
-	onunload() {
-		this.webserver.stop();
 	}
 }
